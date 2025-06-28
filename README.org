@@ -1,0 +1,4 @@
+#+TITLE: Vasilis Kardaras' GNU Emacs config
+#+AUTHOR: Vasilis Kardaras
+
+* My personal Emacs config
