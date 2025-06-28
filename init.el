@@ -41,10 +41,20 @@
 (load custom-file)
 
 ;;; load theme
-(use-package gruvbox-theme
+(use-package modus-themes
+  :ensure t
   :config
-  (load-theme 'gruvbox))
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs nil)
+  ;; Maybe define some palette overrides, such as by using our presets
+  (setq modus-themes-common-palette-overrides
+        modus-themes-preset-overrides-intense)
+  ;; Load the theme of your choice.
+  (load-theme 'modus-vivendi)
+  (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 
+;;; Autocompletion
 (use-package vertico
   :config
   (vertico-mode))
