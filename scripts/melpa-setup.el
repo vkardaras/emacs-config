@@ -1,0 +1,17 @@
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/"))
+
+;;; BOOTSTRAP USE-PACKAGE
+(package-initialize)
+(setq use-package-always-ensure t)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile (require 'use-package))
+
+;;; UNDO
+;; Vim style undo not needed for emacs 28
+(use-package undo-fu)
+
+(provide 'melpa-setup)
