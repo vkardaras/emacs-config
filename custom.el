@@ -10,10 +10,12 @@
      "d5fd482fcb0fe42e849caba275a01d4925e422963d1cd165565b31d3f4189c87"
      default))
  '(package-selected-packages
-   '(all-the-icons all-the-icons-dired all-the-icons-ivy-rich counsel
-		   evil-collection general gruvbox-theme modus-themes
-		   org-bullets rainbow-mode sudo-edit toc-org undo-fu
-		   vertico vterm vterm-toggle)))
+   '(all-the-icons all-the-icons-dired all-the-icons-ivy-rich company
+		   company-box counsel dashboard diminish
+		   evil-collection flycheck general gruvbox-theme
+		   modus-themes org-bullets projectile rainbow-mode
+		   sudo-edit toc-org undo-fu vertico vterm
+		   vterm-toggle)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
