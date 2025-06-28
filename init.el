@@ -1,3 +1,5 @@
+;;; package --- my-config
+;;; Commentary
 ;;; Set up package.el to work with MELPA
 (require 'package)
 (add-to-list 'package-archives
@@ -72,6 +74,7 @@
     :global-prefix "M-SPC") ;; access leader in insert mode
 
   (vk/leader-keys
+    "SPC" '(counsel-M-x :wk "Counsel M-x")
     "." '(find-file :wk "Find file")
     "f c" '((lambda () (interactive) (find-file "~/.emacs.d/init.el")) :wk "Edit emacs config")
     "f r" '(counsel-recentf :wk "Find recent files")
@@ -100,6 +103,27 @@
     "h v" '(describe-variable :wk "Describe variable")
     "h r r" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :wk "Reload emacs config"))
     ;;"hrr" '(reload-init-file :wk "Reload emacs config"))
+  
+
+  (vk/leader-keys
+    "m" '(:ignore t :wk "Org")
+    "m a" '(org-agenda :wk "Org agenda")
+    "m e" '(org-export-dispatch :wk "Org export dispatch")
+    "m i" '(org-toggle-item :wk "Org toggle item")
+    "m t" '(org-todo :wk "Org todo")
+    "m B" '(org-babel-tangle :wk "Org babel tangle")
+    "m T" '(org-todo-list :wk "Org todo list"))
+
+  (vk/leader-keys
+    "m b" '(:ignore t :wk "Tables")
+    "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
+
+  (vk/leader-keys
+    "m d" '(:ignore t :wk "Date/deadline")
+    "m d t" '(org-time-stamp :wk "Org time stamp"))
+
+  (vk/leader-keys
+    "p" '(projectile-command-map :wk "Projectile"))
 
   (vk/leader-keys
     "t" '(:ignore t :wk "Toggle")
@@ -155,6 +179,7 @@
 
 ;; configure indentation
 (electric-indent-mode -1)
+(setq org-edit-src-content-indentation 0)
 
 ;; add icons
 (use-package all-the-icons
@@ -166,6 +191,7 @@
 
 ;; rainbow mode
 (use-package rainbow-mode
+  :diminish
   :hook 
   ((org-mode prog-mode) . rainbow-mode))
 
@@ -198,6 +224,7 @@
 ;;; ivy and counsel
 (use-package counsel
   :after ivy
+  :diminish
   :config (counsel-mode))
 
 (use-package ivy
@@ -205,6 +232,7 @@
   ;; ivy-resume resumes the last Ivy-based completion.
   (("C-c C-r" . ivy-resume)
    ("C-x B" . ivy-switch-buffer-other-window))
+  :diminish
   :custom
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
@@ -310,10 +338,66 @@ one, an error is signaled."
       (set-window-buffer other-win buf-this-buf)
       (select-window other-win))))
 
+;;; Project management
+;; Projectile
+(use-package projectile
+  :config
+  (projectile-mode 1))
+
+;; Dashboard
+(use-package dashboard
+  :ensure t 
+  :init
+  (setq initial-buffer-choice 'dashboard-open)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-banner-logo-title "Emacs Is More Than A Text Editor!")
+  ;;(setq dashboard-startup-banner 'logo) ;; use standard emacs logo as banner
+  (setq dashboard-startup-banner "~/.emacs.d/images/emacs-dash.png")  ;; use custom image as banner
+  (setq dashboard-center-content nil) ;; set to 't' for centered content
+  (setq dashboard-items '((recents . 5)
+                          (agenda . 5 )
+                          (bookmarks . 3)
+                          (projects . 3)
+                          (registers . 3)))
+  :custom 
+  (dashboard-modify-heading-icons '((recents . "file-text")
+				    (bookmarks . "book")))
+  :config
+  (dashboard-setup-startup-hook))
+
+;; Diminish
+(use-package diminish)
+
+;; Flycheck
+(use-package flycheck
+  :ensure t
+  :defer t
+  :diminish
+  :init (global-flycheck-mode))
+
+;; Company
+(use-package company
+  :defer 2
+  :diminish
+  :custom
+  (company-begin-commands '(self-insert-command))
+  (company-idle-delay .1)
+  (company-minimum-prefix-length 2)
+  (company-show-numbers t)
+  (company-tooltip-align-annotations 't)
+  (global-company-mode t))
+
+(use-package company-box
+  :after company
+  :diminish
+  :hook (company-mode . company-box-mode))
+
 ;;; which key
 (use-package which-key
   :init
     (which-key-mode 1)
+  :diminish
   :config
   (setq which-key-side-window-location 'bottom
 	which-key-sort-order #'which-key-key-order-alpha
@@ -325,6 +409,6 @@ one, an error is signaled."
 	which-key-side-window-max-height 0.25
 	which-key-idle-delay 0.8
 	which-key-max-description-length 25
-	which-key-allow-imprecise-window-fit t
+	which-key-allow-imprecise-window-fit nil
 	which-key-separator " → " ))
 
