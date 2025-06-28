@@ -1,21 +1,9 @@
-;;; package --- my-config
-;;; Commentary
 ;;; Set up package.el to work with MELPA
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'load-path "~/.emacs.d/scripts/")
 
-;;; BOOTSTRAP USE-PACKAGE
-(package-initialize)
-(setq use-package-always-ensure t)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile (require 'use-package))
-
-;;; UNDO
-;; Vim style undo not needed for emacs 28
-(use-package undo-fu)
+;; source the scripts
+(require 'melpa-setup)
+(require 'buffer-move)
 
 ;;; Vim Bindings
 (use-package evil
@@ -39,6 +27,16 @@
   (setq evil-want-integration t)
   (evil-collection-init))
 
+;; Using RETURN to follow links in Org/Evil 
+;; Unmap keys in 'evil-maps if not done, (setq org-return-follows-link t) will not work
+(with-eval-after-load 'evil-maps
+  (define-key evil-motion-state-map (kbd "SPC") nil)
+  (define-key evil-motion-state-map (kbd "RET") nil)
+  (define-key evil-motion-state-map (kbd "TAB") nil))
+;; Setting RETURN key in org-mode to follow links
+  (setq org-return-follows-link  t)
+
+;; Move customizations to custom file
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -81,13 +79,31 @@
     "TAB TAB" '(comment-line :wk "Comment lines"))
 
   (vk/leader-keys
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
+    "b" '(:ignore t :wk "Bookmarks/Buffers")
+    "b b" '(counsel-switch-buffer :wk "Switch buffer")
+    "b c" '(clone-indirect-buffer :wk "Create indirect buffer copy in a split")
+    "b C" '(clone-indirect-buffer-other-window :wk "Clone indirect buffer in new window")
+    "b d" '(bookmark-delete :wk "Delete bookmark")
     "b i" '(ibuffer :wk "Ibuffer")
     "b k" '(kill-this-buffer :wk "Kill this buffer")
+    "b K" '(kill-some-buffers :wk "Kill multiple buffers")
+    "b l" '(list-bookmarks :wk "List bookmarks")
+    "b m" '(bookmark-set :wk "Set bookmark")
     "b n" '(next-buffer :wk "Next buffer")
     "b p" '(previous-buffer :wk "Previous buffer")
-    "b r" '(revert-buffer :wk "Reload buffer"))
+    "b r" '(revert-buffer :wk "Reload buffer")
+    "b R" '(rename-buffer :wk "Rename buffer")
+    "b s" '(basic-save-buffer :wk "Save buffer")
+    "b S" '(save-some-buffers :wk "Save multiple buffers")
+    "b w" '(bookmark-save :wk "Save current bookmarks to bookmark file")
+    "b y" '(yank-buffer :wk "Yank buffer"))
+ 
+  (vk/leader-keys
+    "d" '(:ignore t :wk "Dired")
+    "d d" '(dired :wk "Open dired")
+    "d j" '(dired-jump :wk "Dired jump to current")
+    "d n" '(neotree-dir :wk "Open directory in neotree")
+    "d p" '(peep-dired :wk "Peep-dired"))
 
   (vk/leader-keys
     "e" '(:ignore t :wk "Evaluate")    
@@ -99,11 +115,38 @@
 
   (vk/leader-keys
     "h" '(:ignore t :wk "Help")
+    "h a" '(counsel-apropos :wk "Apropos")
+    "h b" '(describe-bindings :wk "Describe bindings")
+    "h c" '(describe-char :wk "Describe character under cursor")
+    "h d" '(:ignore t :wk "Emacs documentation")
+    "h d a" '(about-emacs :wk "About Emacs")
+    "h d d" '(view-emacs-debugging :wk "View Emacs debugging")
+    "h d f" '(view-emacs-FAQ :wk "View Emacs FAQ")
+    "h d m" '(info-emacs-manual :wk "The Emacs manual")
+    "h d n" '(view-emacs-news :wk "View Emacs news")
+    "h d o" '(describe-distribution :wk "How to obtain Emacs")
+    "h d p" '(view-emacs-problems :wk "View Emacs problems")
+    "h d t" '(view-emacs-todo :wk "View Emacs todo")
+    "h d w" '(describe-no-warranty :wk "Describe no warranty")
+    "h e" '(view-echo-area-messages :wk "View echo area messages")
     "h f" '(describe-function :wk "Describe function")
+    "h F" '(describe-face :wk "Describe face")
+    "h g" '(describe-gnu-project :wk "Describe GNU Project")
+    "h i" '(info :wk "Info")
+    "h I" '(describe-input-method :wk "Describe input method")
+    "h k" '(describe-key :wk "Describe key")
+    "h l" '(view-lossage :wk "Display recent keystrokes and the commands run")
+    "h L" '(describe-language-environment :wk "Describe language environment")
+    "h m" '(describe-mode :wk "Describe mode")
+    "h r" '(:ignore t :wk "Reload")
+    "h r r" '((lambda () (interactive)
+                (load-file "~/.config/emacs/init.el")
+                (ignore (elpaca-process-queues)))
+              :wk "Reload emacs config")
+    "h t" '(load-theme :wk "Load theme")
     "h v" '(describe-variable :wk "Describe variable")
-    "h r r" '((lambda () (interactive) (load-file "~/.emacs.d/init.el")) :wk "Reload emacs config"))
-    ;;"hrr" '(reload-init-file :wk "Reload emacs config"))
-  
+    "h w" '(where-is :wk "Prints keybinding for command if set")
+    "h x" '(describe-command :wk "Display full documentation for command"))
 
   (vk/leader-keys
     "m" '(:ignore t :wk "Org")
@@ -166,6 +209,9 @@
 (add-to-list 'default-frame-alist '(font . "JetBrains Mono-14"))
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
+
+;;; move backup files to trash
+(setq backup-directory-alist '((".*" . "~/.Trash")))
 
 ;;; config ui
 ;; hide menu bar, tool bar and scroll bar
@@ -272,72 +318,6 @@
       "f u" '(sudo-edit-find-file :wk "Sudo find file")
       "f U" '(sudo-edit :wk "Sudo edit file")))
 
-;;; Buffer mode
-(require 'windmove)
-
-(defun buf-move-up ()
-  "Swap the current buffer and the buffer above the split.
-If there is no split, ie now window above the current one, an
-error is signaled."
-;;  "Switches between the current buffer, and the buffer above the
-;;  split, if possible."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'up))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No window above this one")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-(defun buf-move-down ()
-"Swap the current buffer and the buffer under the split.
-If there is no split, ie now window under the current one, an
-error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'down))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (or (null other-win) 
-            (string-match "^ \\*Minibuf" (buffer-name (window-buffer other-win))))
-        (error "No window under this one")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-(defun buf-move-left ()
-"Swap the current buffer and the buffer on the left of the split.
-If there is no split, ie now window on the left of the current
-one, an error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'left))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No left split")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
-(defun buf-move-right ()
-"Swap the current buffer and the buffer on the right of the split.
-If there is no split, ie now window on the right of the current
-one, an error is signaled."
-  (interactive)
-  (let* ((other-win (windmove-find-other-window 'right))
-	 (buf-this-buf (window-buffer (selected-window))))
-    (if (null other-win)
-        (error "No right split")
-      ;; swap top with this one
-      (set-window-buffer (selected-window) (window-buffer other-win))
-      ;; move this one to top
-      (set-window-buffer other-win buf-this-buf)
-      (select-window other-win))))
-
 ;;; Project management
 ;; Projectile
 (use-package projectile
@@ -369,12 +349,12 @@ one, an error is signaled."
 ;; Diminish
 (use-package diminish)
 
-;; Flycheck
-(use-package flycheck
-  :ensure t
-  :defer t
-  :diminish
-  :init (global-flycheck-mode))
+;; ;; Flycheck
+;; (use-package flycheck
+;;   :ensure t
+;;   :defer t
+;;   :diminish
+;;   :init (global-flycheck-mode))
 
 ;; Company
 (use-package company
