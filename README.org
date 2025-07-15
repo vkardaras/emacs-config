@@ -1,0 +1,6 @@
+#+TITLE: VK's GNU Emacs Config
+#+AUTHOR: Vasilis Kardaras (VK)
+#+DESCRIPTION: VK's personal Emacs config.
+#+STARTUP: showeverything
+
+* My personal Emacs config

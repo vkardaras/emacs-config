@@ -1,0 +1,8 @@
+auto-save-list/
+eln-cache/
+elpa/
+tldr/
+transient/
+url/
+#init.el#
+sessions
