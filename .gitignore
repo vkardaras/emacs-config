@@ -4,5 +4,5 @@ elpa/
 tldr/
 transient/
 url/
-#init.el#
+\#*
 sessions

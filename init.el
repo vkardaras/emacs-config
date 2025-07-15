@@ -108,6 +108,7 @@
           evil-want-keybinding nil
           evil-vsplit-window-right t
           evil-split-window-below t
+          evil-define-key 'normal vterm-mode-map "p" 'vterm-yank
           evil-undo-system 'undo-redo)  ;; Adds vim-like C-r redo functionality
     (evil-mode 1))
 
