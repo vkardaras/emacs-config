@@ -9,8 +9,8 @@
              git-timemachine hl-todo lsp-java lsp-ui magit marginalia
              nerd-icons-dired orderless org-bullets pdf-tools pdf-view
              perspective sudo-edit tldr toc-org treemacs-persp
-             treemacs-projectile treesit-auto vertico vterm-toggle
-             yasnippet)))
+             treemacs-projectile treesit-auto verb vertico
+             vterm-toggle yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

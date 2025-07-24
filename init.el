@@ -580,3 +580,11 @@
   (define-key ediff-mode-map "k" 'ediff-previous-difference))
 
 (add-hook 'ediff-mode-hook 'vk-ediff-hook)
+
+(setq display-buffer-alist nil)
+
+;; Rest
+(use-package verb)
+(use-package org
+  :mode ("\\.org\\'" . org-mode)
+  :config (define-key org-mode-map (kbd "C-c C-r") verb-command-map))
